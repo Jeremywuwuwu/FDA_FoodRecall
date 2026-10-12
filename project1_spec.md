@@ -1,8 +1,8 @@
 # Part 1 Spec — Predicting FDA Recall Severity from Structured Data
 
-**Scope assumption:** food enforcement reports only (`/food/enforcement.json`). Tightest supply-chain + food-safety story. If you later want more volume, pooling drug and device data is a one-line change with `product_type` as an added feature — but do that in a v2, not now.
+**Scope assumption:** food enforcement reports only (`/food/enforcement.json`). Tightest supply-chain + food-safety story.
 
-**Deliberate constraint:** Project 1 uses **no text fields**. `reason_for_recall` and `product_description` are held back entirely for Project 2. This is what makes the two projects comparable and gives Project 2 a real question to answer.
+**Deliberate constraint:** Project 1 uses **no text fields**. `reason_for_recall` and `product_description` are held back entirely for Project 2. This is what makes the two projects comparable and gives Project 2 a different ML model using Natural Language Processing by taking different text as features to predict the same outcome variable (class I).
 
 ---
 
