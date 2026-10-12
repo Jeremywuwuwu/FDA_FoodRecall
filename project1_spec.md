@@ -41,13 +41,13 @@ Rationale: Class II dominates heavily, three-class modeling splits the minority 
 | `reason_for_recall`, `product_description` | Yes | **Hold for Project 2** |
 | `recall_number`, `event_id` | Yes | IDs only — never features |
 
-The `report_date` call is the subtle one. It's tempting because the initiation-to-report gap is predictive. It's predictive *because* urgent recalls get processed faster — that's the outcome leaking backward. Drop it and say why.
+The `report_date` call is the subtle one. It's tempting because the initiation-to-report gap is predictive *because* urgent recalls get processed faster, so a shorter report date would likely mean a Class I recall which is the outcome leaking backward. Dropped!
 
 ---
 
-## 4. Feature engineering — this is the actual work
+## 4. Feature engineering 
 
-Raw structured fields here are thin. Anyone can one-hot encode `state`. The engineered features are what make Project 1 more than a tutorial:
+Raw structured fields here are thin:
 
 **Firm history (compute causally — this is where leakage sneaks back in)**
 - Count of that firm's prior recalls *strictly before* the current initiation date
