@@ -20,13 +20,11 @@
 
 Rationale: Class II dominates heavily, three-class modeling splits the minority signal, and Class I (serious harm) is the operationally meaningful one. Binary keeps the story and comparison clean and easy to interpret.
 
-**Record the base rate before you model anything.** If Class I is under ~5%, plan on threshold tuning and PR-AUC as your headline metric from the start.
+**Recording the base rate before modeling anything.** If Class I is under ~5%, I will conduct threshold tuning and PR-AUC as the headline metric from the start.
 
 ---
 
-## 3. Leakage audit — do this first
-
-Fill this table for every field before writing model code. It goes in the README.
+## 3. Leakage audit done first
 
 | Field | Knowable at initiation? | Decision |
 |---|---|---|
