@@ -1,4 +1,4 @@
-# Project 1 Spec — Predicting FDA Recall Severity from Structured Data
+# Part 1 Spec — Predicting FDA Recall Severity from Structured Data
 
 **Scope assumption:** food enforcement reports only (`/food/enforcement.json`). Tightest supply-chain + food-safety story. If you later want more volume, pooling drug and device data is a one-line change with `product_type` as an added feature — but do that in a v2, not now.
 
