@@ -54,7 +54,7 @@ Raw structured fields here are thin:
 - Share of those prior recalls that were Class I
 - Days since firm's previous recall
 
-> Use an expanding window ordered by date. If you compute firm Class I rate over the whole dataset, you have leaked the test set into training. This is the single most likely way this project produces an inflated score.
+> Use an expanding window ordered by date. If I compute firm Class I rate over the whole dataset, I have leaked the test set into training. This is the most likely way this project produces an inflated score.
 
 **Distribution scope**
 - Parse `distribution_pattern` for number of distinct states mentioned
@@ -75,9 +75,9 @@ Raw structured fields here are thin:
 
 **Temporal split, not random.** Train on earlier years, test on the most recent. This matches how the model would deploy and avoids the fantasy of predicting 2019 from 2023.
 
-Suggested: train ≤2019, validation 2020–2021, test 2022+. Adjust to your actual date range.
+My suggested split on first look: train ≤2019, validation 2020–2021, test 2022+.
 
-**Group check:** one recall event can produce many product rows. Verify no `event_id` spans a split boundary. Use `GroupShuffleSplit` on `event_id` if you supplement with any random splitting.
+**Group check:** one recall event can produce many product rows. Verify no `event_id` spans a split boundary. Use `GroupShuffleSplit` on `event_id` if I supplement with any random splitting.
 
 Verify class balance in each split before proceeding.
 
@@ -85,13 +85,11 @@ Verify class balance in each split before proceeding.
 
 ## 6. Modeling sequence
 
-Run in this order. Do not skip step 1.
-
 1. **Baseline:** logistic regression on a handful of features. Record PR-AUC. Every later number is measured against this.
-2. **Single decision tree:** shallow, plotted. Gives you an interpretable picture of the dominant splits and a figure for the README.
+2. **Single decision tree:** shallow, plotted. Gives an interpretable picture of the dominant splits and a figure for the README.
 3. **XGBoost, default parameters.** How much does boosting buy over the baseline before tuning?
 4. **XGBoost tuned.** `RandomizedSearchCV` over a broad space (~60 iterations), then a small `GridSearchCV` on the narrowed region. Tune on validation only.
-5. **AutoGluon**, same splits, test set untouched until final evaluation. Benchmark only — if it beats you, that's a finding, not a failure.
+5. **Potentially AutoGluon**, same splits, test set untouched until final evaluation. Done only if XGBoost scored higher than the linear logistic regression model.
 
 Handle imbalance with `scale_pos_weight` in XGBoost. Only try resampling if that underperforms, and never resample the validation or test sets.
 
@@ -99,17 +97,17 @@ Handle imbalance with `scale_pos_weight` in XGBoost. Only try resampling if that
 
 ## 7. Evaluation
 
-**Headline metric:** PR-AUC. Report ROC-AUC alongside it, and explain in the README why PR-AUC is the honest one under imbalance — that explanation is itself a differentiator.
+**Headline metric:** PR-AUC. Report ROC-AUC alongside it, and explain in the README why PR-AUC is the honest one under imbalance.
 
-**Also report:** precision, recall, F1 at a tuned threshold; confusion matrix; accuracy only as context, never alone.
+**Also report:** precision, recall, F1 at a tuned threshold; confusion matrix; accuracy only as context, but never a decision maker.
 
-**Threshold:** tune on validation for the operating point you'd actually want. A triage system tolerates false positives to avoid missing a Class I — say so explicitly and pick the threshold accordingly.
+**Threshold:** tune on validation for the operating point I actually want. A triage system tolerates false positives to avoid missing a Class I — say so explicitly and pick the threshold accordingly.
 
 **Interpretability:** SHAP values on the tuned XGBoost. Global importance plus two or three individual explanations.
 
 **Calibration:** reliability curve. If predicted probabilities are meant to drive triage priority, they need to mean something.
 
-**Error analysis:** pull 20–30 misclassified recalls and read them. Look for patterns by product category, firm size, or year. This is where the write-up gets its interesting sentences.
+**Error analysis:** pull 20–30 misclassified recalls and evaluate them. Look for patterns by product category, firm size, or year.
 
 ---
 
@@ -118,7 +116,7 @@ Handle imbalance with `scale_pos_weight` in XGBoost. Only try resampling if that
 - Clean notebook: EDA → leakage audit → feature engineering → modeling → evaluation
 - `README.md` opening with the stakeholder framing, not the methods list
 - 4–6 figures: class balance, temporal trend, SHAP summary, PR curve, confusion matrix, calibration
-- Saved train/val/test indices so Project 2 uses **identical** splits — non-negotiable
+- Saved train/val/test indices so Project 2 uses **identical** splits (!High Importance!)
 
 ---
 
@@ -127,7 +125,7 @@ Handle imbalance with `scale_pos_weight` in XGBoost. Only try resampling if that
 Stop and reassess if:
 
 - Class I base rate is under 1% → reframe as anomaly detection or switch target
-- Tuned XGBoost beats logistic regression by less than ~3 points PR-AUC → structured fields are weak; that's still a legitimate finding *and* a stronger setup for Project 2, but say so honestly rather than dressing it up
+- Tuned XGBoost beats logistic regression by less than ~3 points PR-AUC → structured fields are weak; still a legitimate finding *and* a stronger setup for Project 2 
 - Any model exceeds ~0.95 PR-AUC → assume leakage until proven otherwise, and re-run the audit in section 3
 
 ---
@@ -139,7 +137,6 @@ Stop and reassess if:
 | 1 | Pull data via openFDA API, EDA, leakage audit table |
 | 2 | Feature engineering, especially causal firm-history features |
 | 3 | Baseline → tree → XGBoost default → tuned |
-| 4 | AutoGluon benchmark, SHAP, calibration, error analysis |
+| 4 | SHAP, calibration, error analysis |
 | 5 | README, figures, repo cleanup |
 
-The riskiest phase is 2. Causal firm-history features are fiddly and are where a silent bug will cost you the whole project's credibility. Write a unit test: for a given firm and date, assert the prior-recall count matches a manual filter of the raw data.
