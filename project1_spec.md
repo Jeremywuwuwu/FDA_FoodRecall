@@ -16,9 +16,9 @@
 
 ## 2. Target variable
 
-**Primary:** binary — `classification == "Class I"` vs. Class II/III combined.
+**Primary:** `classification == "Class I"` vs. Class II/III combined (Binary)
 
-Rationale: Class II dominates heavily, three-class modeling splits your minority signal, and Class I (serious harm) is the operationally meaningful one. Binary keeps the metric story clean.
+Rationale: Class II dominates heavily, three-class modeling splits the minority signal, and Class I (serious harm) is the operationally meaningful one. Binary keeps the story and comparison clean and easy to interpret.
 
 **Record the base rate before you model anything.** If Class I is under ~5%, plan on threshold tuning and PR-AUC as your headline metric from the start.
 
