@@ -10,7 +10,7 @@
 
 > Using only structured and firm-level historical features available at the time a recall is initiated, how accurately can we predict whether the FDA will classify it as Class I (reasonable probability of serious health consequences)?
 
-**Framing for the write-up:** classification happens after FDA review. A model that flags likely Class I recalls at intake supports faster triage and earlier public warning. That's the stakeholder argument — lead the README with it.
+**Framing for the write-up:** classification happens after FDA review. A model that flags likely Class I recalls at intake supports faster triage and earlier public warning. This allows Class I (most severe recalls) to be identified earlier, where if not classified fast enough, might cause larger public health harm as contaminated products remain on shelves and in consumers' homes.
 
 ---
 
